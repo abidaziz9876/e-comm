@@ -1,0 +1,308 @@
+definitions:
+  models.Address:
+    properties:
+      address_id:
+        type: string
+      city_name:
+        type: string
+      house_name:
+        type: string
+      pin_code:
+        type: string
+      street_name:
+        type: string
+    type: object
+  models.Order:
+    properties:
+      discount:
+        type: integer
+      order_ID:
+        type: string
+      order_list:
+        items:
+          $ref: '#/definitions/models.ProductUser'
+        type: array
+      ordered_on:
+        type: string
+      payment_method:
+        $ref: '#/definitions/models.Payment'
+      total_price:
+        type: integer
+    type: object
+  models.Payment:
+    properties:
+      cod:
+        type: boolean
+      digital:
+        type: boolean
+    type: object
+  models.Product:
+    properties:
+      image:
+        type: string
+      price:
+        type: integer
+      product_ID:
+        type: string
+      product_name:
+        type: string
+      rating:
+        type: integer
+    type: object
+  models.ProductUser:
+    properties:
+      image:
+        type: string
+      price:
+        type: integer
+      product_ID:
+        type: string
+      product_name:
+        type: string
+      rating:
+        type: integer
+    type: object
+  models.User:
+    properties:
+      _id:
+        type: string
+      address:
+        items:
+          $ref: '#/definitions/models.Address'
+        type: array
+      created_at:
+        type: string
+      email:
+        type: string
+      first_name:
+        maxLength: 30
+        minLength: 2
+        type: string
+      last_name:
+        maxLength: 30
+        minLength: 2
+        type: string
+      orders:
+        items:
+          $ref: '#/definitions/models.Order'
+        type: array
+      password:
+        minLength: 6
+        type: string
+      phone:
+        type: string
+      refresh_Token:
+        type: string
+      token:
+        type: string
+      updtaed_at:
+        type: string
+      user_id:
+        type: string
+      usercart:
+        items:
+          $ref: '#/definitions/models.ProductUser'
+        type: array
+    required:
+    - email
+    - first_name
+    - last_name
+    - password
+    - phone
+    type: object
+  responses.ApplicationResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /addtocart:
+    get:
+      description: It will just add the product in the user cart
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
+      - description: userID
+        in: query
+        name: userID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ApplicationResponse'
+      summary: to add in cart
+      tags:
+      - Cart Apis
+  /admin/addproduct:
+    post:
+      description: you can add products here by filling product details
+      parameters:
+      - description: Product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ApplicationResponse'
+      summary: To add a product in the store
+      tags:
+      - User Apis
+  /cartcheckout:
+    get:
+      description: It will just buy the product from the user cart
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ApplicationResponse'
+      summary: to buy from cart
+      tags:
+      - Cart Apis
+  /instantbuy:
+    get:
+      description: It will just buy the product instantly
+      parameters:
+      - description: userid
+        in: query
+        name: userid
+        required: true
+        type: string
+      - description: pid
+        in: query
+        name: pid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ApplicationResponse'
+      summary: to buy instant
+      tags:
+      - Cart Apis
+  /removeitem:
+    get:
+      description: It will just remove the product from the user cart
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
+      - description: userID
+        in: query
+        name: userID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ApplicationResponse'
+      summary: to remove in cart
+      tags:
+      - Cart Apis
+  /users/login:
+    post:
+      description: Please provide email and password to signin
+      parameters:
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ApplicationResponse'
+      summary: User SignIn
+      tags:
+      - User Apis
+  /users/productview:
+    get:
+      description: It will give you all the products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ApplicationResponse'
+      summary: To show all products
+      tags:
+      - User Apis
+  /users/search:
+    get:
+      description: It will give you the product for product id
+      parameters:
+      - description: name
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ApplicationResponse'
+      summary: To get product
+      tags:
+      - User Apis
+  /users/signup:
+    post:
+      description: Please provide firstname, lastname, phone, email and password to
+        signup
+      parameters:
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ApplicationResponse'
+      summary: User SignUp
+      tags:
+      - User Apis
+swagger: "2.0"
